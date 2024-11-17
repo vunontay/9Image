@@ -33,7 +33,7 @@ export async function signIn(_: unknown, formData: FormData) {
         });
 
         const user = await workos.userManagement.authenticateWithPassword({
-            clientId: process.env.WORKOS_CLIENT_ID || "",
+            clientId: process.env.WORKOS_CLIENT_ID!,
             email,
             password,
         });

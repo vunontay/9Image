@@ -14,7 +14,7 @@ export async function generatePhotosPipeline({
     match,
 }: Record<string, unknown>): Promise<PipelineStage[]> {
     const user = await getUser();
-    const userId = user ? new Types.ObjectId(user._id) : undefined;
+    const userId = user ? new Types.ObjectId(user?._id) : undefined;
 
     const basePipeline: PipelineStage[] = [
         {

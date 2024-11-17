@@ -33,7 +33,7 @@ export async function getUser() {
                 return null;
             }
             const plainUser: TUser = {
-                _id: user._id.toString(),
+                _id: user?._id.toString(),
                 name: user.name ?? "",
                 email: user.email ?? "",
                 avatar: user.avatar ?? "",

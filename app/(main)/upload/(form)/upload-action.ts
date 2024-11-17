@@ -32,7 +32,7 @@ export async function uploadImage(
         );
         const blurData = await Promise.all(blurDataPromise);
         const newPhotos = photos.map((photo, index) => ({
-            user: user._id,
+            user: user?._id,
             public_id: photo.public_id,
             imgUrl: photo.secure_url,
             title: filesUpload[index].title,
@@ -44,9 +44,9 @@ export async function uploadImage(
         }));
 
         // Save images to Database
+        revalidatePath("/");
         await PhotoModel.insertMany(newPhotos);
         return { status: 200, message: "Upload successful" };
-        revalidatePath("/");
     } catch (error) {
         if (error instanceof Error) {
             return { error: error.message };

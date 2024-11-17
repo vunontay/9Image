@@ -58,7 +58,7 @@ const GalleryPhoto = ({
             <div className="masonry">
                 {files?.map((file, index) => (
                     <CardPhoto
-                        key={file._id}
+                        key={file?._id}
                         photo={file}
                         setPhotos={setFiles}
                         index={index}

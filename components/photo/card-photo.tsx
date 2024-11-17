@@ -32,7 +32,7 @@ const CardPhotoComponent = ({ photo }: ICardPhoto) => {
                 <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
             </div>
             <div className="absolute top-2 right-2 flex space-x-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                {photo.my_user_id === photo.user._id && (
+                {photo?.my_user_id === photo?.user?._id && (
                     <>
                         <Button
                             variant="secondary"
@@ -67,8 +67,8 @@ const CardPhotoComponent = ({ photo }: ICardPhoto) => {
             </div>
             <div className="absolute bottom-0 left-0 right-0 p-4 flex justify-between items-end">
                 <Link
-                    href={`/profile/${photo.user._id}`}
-                    title={photo.user._id}
+                    href={`/`}
+                    title={photo?.user?._id}
                     className="flex items-center space-x-2 text-white"
                 >
                     <Avatar className="border-2 border-white">

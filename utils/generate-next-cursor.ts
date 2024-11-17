@@ -12,6 +12,6 @@ export function generateNextCursor({
     if (sort === "updatedAt") {
         return new Date(data[limit - 1].updatedAt ?? "").getTime() || "stop";
     } else {
-        return data[limit - 1]._id || "stop";
+        return data[limit - 1]?._id || "stop";
     }
 }
