@@ -26,43 +26,60 @@ const SearchForm = ({ className }: ISearchForm) => {
             <div className={cn("flex items-center", className)}>
                 <div>
                     <Select name="type" defaultValue="photos">
-                        <SelectTrigger className="min-w-36 text-sm font-medium border-r rounded-r-none focus:ring-0 focus:ring-offset-0">
+                        <SelectTrigger
+                            className="min-w-36 text-sm font-medium border-r rounded-r-none focus:ring-0 focus:ring-offset-0"
+                            aria-label="Search type"
+                        >
                             <SelectValue placeholder="Search type" />
                         </SelectTrigger>
                         <SelectContent>
                             <SelectItem value="photos">
                                 <div className="flex items-center gap-2">
-                                    <ImageIcon className="w-4 h-4" />
+                                    <ImageIcon
+                                        className="w-4 h-4"
+                                        aria-hidden="true"
+                                    />
                                     <span>Photos</span>
                                 </div>
                             </SelectItem>
                             <SelectItem value="collections">
                                 <div className="flex items-center gap-2">
-                                    <FolderClosed className="w-4 h-4" />
+                                    <FolderClosed
+                                        className="w-4 h-4"
+                                        aria-hidden="true"
+                                    />
                                     <span>Collections</span>
                                 </div>
                             </SelectItem>
                             <SelectItem value="users">
                                 <div className="flex items-center gap-2">
-                                    <SquareUserRound className="w-4 h-4" />
+                                    <SquareUserRound
+                                        className="w-4 h-4"
+                                        aria-hidden="true"
+                                    />
                                     <span>Users</span>
                                 </div>
                             </SelectItem>
                         </SelectContent>
                     </Select>
                 </div>
-                <div className="relative">
+                <div className="relative flex-grow">
+                    <label htmlFor="search-input" className="sr-only">
+                        Search image
+                    </label>
                     <Input
+                        id="search-input"
                         name="query"
                         placeholder="Search image..."
-                        className="pe-10 border-l-0 rounded-l-none focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0"
+                        className="pe-10 border-l-0 rounded-l-none focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0 w-full"
                     />
                     <Button
                         type="submit"
                         variant="default"
                         className="absolute right-2 top-1/2 w-10 h-8 -translate-y-1/2 transform rounded-sm"
+                        aria-label="Search"
                     >
-                        <SearchIcon />
+                        <SearchIcon aria-hidden="true" />
                     </Button>
                 </div>
             </div>

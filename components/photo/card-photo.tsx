@@ -38,6 +38,7 @@ const CardPhotoComponent = ({ photo }: ICardPhoto) => {
                             variant="secondary"
                             size="icon"
                             className="rounded-full bg-white/80 hover:bg-white"
+                            aria-label="Add to favorites"
                         >
                             <Heart
                                 className={cn(
@@ -52,6 +53,7 @@ const CardPhotoComponent = ({ photo }: ICardPhoto) => {
                             variant="secondary"
                             size="icon"
                             className="rounded-full bg-white/80 hover:bg-white"
+                            aria-label="Edit"
                         >
                             <FilePenLine className="h-4 w-4 text-gray-700" />
                         </Button>
@@ -59,6 +61,7 @@ const CardPhotoComponent = ({ photo }: ICardPhoto) => {
                             variant="secondary"
                             size="icon"
                             className="rounded-full bg-white/80 hover:bg-white"
+                            aria-label="Delete"
                         >
                             <CircleX className="h-4 w-4 text-gray-700" />
                         </Button>
@@ -71,9 +74,9 @@ const CardPhotoComponent = ({ photo }: ICardPhoto) => {
                     title={photo?.user?._id}
                     className="flex items-center space-x-2 text-white"
                 >
-                    <Avatar className="border-2 border-white">
+                    <Avatar className="shadow-lg bg-white">
                         <AvatarImage src={photo.user.avatar || ""} />
-                        <AvatarFallback className="text-primary">
+                        <AvatarFallback className="text-foreground">
                             {photo.user.name.slice(0, 2).toUpperCase()}
                         </AvatarFallback>
                     </Avatar>
@@ -87,6 +90,7 @@ const CardPhotoComponent = ({ photo }: ICardPhoto) => {
                     size="icon"
                     className="rounded-full bg-white/80 hover:bg-white"
                     onClick={() => handleDownloadImage(photo)}
+                    aria-label="Download Image"
                 >
                     <CloudDownload className="h-4 w-4 text-gray-700" />
                 </Button>

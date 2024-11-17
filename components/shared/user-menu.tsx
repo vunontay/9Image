@@ -99,7 +99,7 @@ const UploadButton = ({ className, user }: IUserMenu) => {
 
     return (
         <div className={className} onClick={handleRedirectUpload}>
-            <Button variant={"default"} size={"default"}>
+            <Button variant={"outline"} size={"default"}>
                 Upload <Upload />
             </Button>
         </div>
