@@ -1,7 +1,7 @@
 const baseURL =
     process.env.NODE_ENV === "development"
         ? "http://localhost:3000"
-        : "http://localhost:3000";
+        : process.env.NEXT_PUBLIC_APP_URL;
 
 export async function dynamicBlurDataUrl(url: string): Promise<string> {
     // Fetch and convert the smallest image to Base64
