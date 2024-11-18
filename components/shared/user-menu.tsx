@@ -170,7 +170,7 @@ const UserButton = ({ className, user }: IUserMenu) => {
                     {user?.name}
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <Link href={`""`}>
+                <Link href={`/profile/${user?._id}`}>
                     <DropdownMenuItem>
                         <UserIcon className="mr-2 size-4" />
                         Profile

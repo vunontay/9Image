@@ -37,3 +37,9 @@ export async function uploadToCloudinary(
 
     return await Promise.all(multiplePhotosPromise);
 }
+
+export async function destroyFromCloudinary(public_id: string) {
+    if (public_id) {
+        return await cloudinary.uploader.destroy(public_id);
+    }
+}

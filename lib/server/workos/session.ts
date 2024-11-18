@@ -37,12 +37,17 @@ export async function getUser() {
                 name: user.name ?? "",
                 email: user.email ?? "",
                 avatar: user.avatar ?? "",
+                public_id: user.public_id ?? "",
                 followers: (user.followers ?? []).map((id: string) =>
                     id.toString()
                 ),
                 followings: (user.followings ?? []).map((id: string) =>
                     id.toString()
                 ),
+                is_following: undefined,
+                total_followers: user.followers.length,
+                total_followings: user.followings.length,
+                my_user_id: user?._id.toString(),
                 createdAt: user.createdAt.toString(),
                 updatedAt: user.updatedAt.toString(),
             };

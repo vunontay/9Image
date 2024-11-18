@@ -7,6 +7,7 @@ import { generateNextCursor } from "@/utils/generate-next-cursor";
 
 import PhotoModel from "@/models/photo-model";
 import mongooseConnect from "@/lib/server/mongoose/mongoose";
+import { revalidatePath } from "next/cache";
 
 export async function generatePhotosPipeline({
     sort,
@@ -94,5 +95,35 @@ export async function getPhotos(query: {
             photos: [],
             nextCursor: "stop",
         };
+    }
+}
+
+export async function addFavoritePhoto(photo: TPhotoData) {
+    try {
+        await mongooseConnect();
+        if (photo.is_favorite) {
+            await PhotoModel.findByIdAndUpdate(photo._id, {
+                $pull: { favorite_users: photo.my_user_id },
+            });
+        } else {
+            await PhotoModel.findByIdAndUpdate(photo._id, {
+                $push: { favorite_users: photo.my_user_id },
+            });
+        }
+
+        revalidatePath("/");
+
+        return {
+            success: true,
+            message: "Favorite photo updated successfully",
+        };
+    } catch (error) {
+        console.error("Error updating favorite photo:", error);
+
+        if (error instanceof Error) {
+            throw new Error(error.message);
+        }
+
+        throw new Error("An error occurred while updating the favorite photo");
     }
 }

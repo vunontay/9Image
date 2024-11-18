@@ -24,10 +24,12 @@ const GalleryPhoto = ({
     nextCursor,
 }: IGalleryPhoto) => {
     const [files, setFiles] = useState<TPhotoData[] | null>(data || null);
+
     const [next, setNext] = useState<string | number>(nextCursor);
     const [hasMore, setHasMore] = useState<boolean>(true);
     const [isPending, startTransition] = useTransition();
     const { ref, inView } = useInView();
+
     const handleLoadMore = async () => {
         if (nextCursor === "stop" || isPending || !hasMore) return;
 
@@ -58,7 +60,7 @@ const GalleryPhoto = ({
             <div className="masonry">
                 {files?.map((file, index) => (
                     <CardPhoto
-                        key={file?._id}
+                        key={file._id}
                         photo={file}
                         setPhotos={setFiles}
                         index={index}

@@ -19,7 +19,6 @@ const UserAvatar = ({ avatarUrl, size, className }: IUserAvatar) => {
                 "aspect-square h-fit flex-none rounded-full bg-secondary object-cover",
                 className
             )}
-            placeholder="blur"
             sizes="(max-width:50px) 2vw"
         />
     );
