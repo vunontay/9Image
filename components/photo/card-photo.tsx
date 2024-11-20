@@ -58,7 +58,7 @@ const CardPhotoComponent = ({ photo, setPhotos }: ICardPhoto) => {
                 <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
             </div>
             <div className="absolute top-2 right-2 flex space-x-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                {photo?.my_user_id === photo?.user?._id ? (
+                {photo?.my_user_id === photo?.user?._id && (
                     <>
                         <Button
                             variant="secondary"
@@ -77,24 +77,23 @@ const CardPhotoComponent = ({ photo, setPhotos }: ICardPhoto) => {
                             <CircleX className="h-4 w-4 text-gray-700" />
                         </Button>
                     </>
-                ) : (
-                    <Button
-                        variant="secondary"
-                        size="icon"
-                        className="rounded-full bg-white/80 hover:bg-white"
-                        aria-label="Add to favorites"
-                        onClick={() => handleAddFavoritePhoto(photo)}
-                    >
-                        <Heart
-                            className={cn(
-                                "h-4 w-4",
-                                photo.is_favorite
-                                    ? "text-red-500 fill-red-500"
-                                    : "text-gray-700"
-                            )}
-                        />
-                    </Button>
                 )}
+                <Button
+                    variant="secondary"
+                    size="icon"
+                    className="rounded-full bg-white/80 hover:bg-white"
+                    aria-label="Add to favorites"
+                    onClick={() => handleAddFavoritePhoto(photo)}
+                >
+                    <Heart
+                        className={cn(
+                            "h-4 w-4",
+                            photo.is_favorite
+                                ? "text-red-500 fill-red-500"
+                                : "text-gray-700"
+                        )}
+                    />
+                </Button>
             </div>
             <div className="absolute bottom-0 left-0 right-0 p-4 flex justify-between items-end">
                 <Link

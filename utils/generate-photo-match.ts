@@ -23,8 +23,9 @@ export function generatePhotosMatch(query: { [key: string]: string }) {
 
     if (page === "favorite") {
         return {
+            public: true,
             favorite_users: new Types.ObjectId(id),
-            ...paginationUpdatedAt,
+            ...paginationId,
         };
     }
 

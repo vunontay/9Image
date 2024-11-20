@@ -18,7 +18,7 @@ const ProfileGallery = async ({ id, page, userId }: IProfileGallery) => {
     // Other user only show public photos
     page = id === userId ? page : "public";
 
-    const sort = page === "favorite" ? "updatedAt" : "_id";
+    const sort = "_id";
 
     const { photos: data, nextCursor } = await getPhotos({ id, sort, page });
     return (
