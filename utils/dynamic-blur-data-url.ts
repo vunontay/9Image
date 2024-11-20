@@ -10,11 +10,6 @@ export async function dynamicBlurDataUrl(url: string): Promise<string> {
     ).then(async (res) =>
         Buffer.from(await res.arrayBuffer()).toString("base64")
     );
-    console.log("Base URL:", baseURL);
-    console.log(
-        "Final Fetch URL:",
-        `${baseURL}/_next/image?url=${encodeURIComponent(url)}&w=16&q=75`
-    );
 
     const blurSvg = `
     <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 5'>

@@ -21,23 +21,24 @@ const CardPhotoComponent = ({ photo, setPhotos }: ICardPhoto) => {
     const handleAddFavoritePhoto = async (photo: TPhotoData) => {
         if (!photo.my_user_id) {
             toast.warning("Please login!");
-        }
-        const newPhoto = { ...photo, is_favorite: !photo.is_favorite };
-
-        setPhotos((photos) => {
-            if (photos) {
-                return photos.map((item) =>
-                    item._id === newPhoto._id ? newPhoto : item
-                );
-            }
-            return photos;
-        });
-
-        const response = await addFavoritePhoto(photo);
-        if (response.success) {
-            toast.success(response.message);
         } else {
-            toast.error(response.message);
+            const newPhoto = { ...photo, is_favorite: !photo.is_favorite };
+
+            setPhotos((photos) => {
+                if (photos) {
+                    return photos.map((item) =>
+                        item._id === newPhoto._id ? newPhoto : item
+                    );
+                }
+                return photos;
+            });
+
+            const response = await addFavoritePhoto(photo);
+            if (response.success) {
+                toast.success(response.message);
+            } else {
+                toast.error(response.message);
+            }
         }
     };
 

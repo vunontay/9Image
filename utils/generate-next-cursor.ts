@@ -9,9 +9,17 @@ export function generateNextCursor({
     limit,
     data,
 }: GenerateNextCursorParams): string | number {
-    if (sort === "updatedAt") {
-        return new Date(data[limit - 1].updatedAt ?? "").getTime() || "stop";
-    } else {
-        return data[limit - 1]?._id || "stop";
+    if (!data || data.length < limit) {
+        return "stop";
     }
+
+    const lastItem = data[limit - 1];
+
+    if (sort === "updatedAt" && lastItem.updatedAt) {
+        return new Date(lastItem.updatedAt).getTime() || "stop";
+    } else if (lastItem?._id) {
+        return lastItem._id;
+    }
+
+    return "stop";
 }

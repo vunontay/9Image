@@ -47,7 +47,6 @@ export async function verifyEmailWithCode(_: unknown, formData: FormData) {
                 avatar: response.user.profilePictureUrl,
             });
             await existingUser.save();
-            console.log("New user created");
         } else {
             console.log("User already exists, skipping creation");
         }

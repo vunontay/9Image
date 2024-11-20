@@ -68,6 +68,23 @@ export async function generatePhotosPipeline({
     return basePipeline;
 }
 
+export async function generatePhotosCountPipeline({
+    match,
+}: Record<string, unknown>): Promise<PipelineStage[]> {
+    const basePipeline: PipelineStage[] = [
+        {
+            $match: match || {},
+        },
+        {
+            $count: "total",
+        },
+    ];
+
+    return basePipeline;
+}
+
+// ---------------------------GET PHOTOS----------------------------
+
 export async function getPhotos(query: {
     [key: string]: string;
 }): Promise<{ photos: TPhotoData[]; nextCursor: string | number }> {
@@ -89,14 +106,40 @@ export async function getPhotos(query: {
             photos,
             nextCursor,
         };
-    } catch (error) {
-        console.error("Error fetching photos:", error);
+    } catch {
         return {
             photos: [],
             nextCursor: "stop",
         };
     }
 }
+
+// ---------------------------GET PHOTOS COUNT ----------------------------
+
+export async function getPhotosCount(query: { [key: string]: string }) {
+    try {
+        const match = generatePhotosMatch(query);
+        const pipeline = await generatePhotosCountPipeline({ match });
+        const [result] = JSON.parse(
+            JSON.stringify(await PhotoModel.aggregate(pipeline))
+        );
+
+        return {
+            success: true,
+            data: result?.total || 0,
+        };
+    } catch (error) {
+        console.error("Error updating favorite photo:", error);
+
+        if (error instanceof Error) {
+            throw new Error(error.message);
+        }
+
+        throw new Error("An error occurred while updating the favorite photo");
+    }
+}
+
+// ---------------------------ADD FAVORITE PHOTO----------------------------
 
 export async function addFavoritePhoto(photo: TPhotoData) {
     try {
@@ -118,8 +161,6 @@ export async function addFavoritePhoto(photo: TPhotoData) {
             message: "Favorite photo updated successfully",
         };
     } catch (error) {
-        console.error("Error updating favorite photo:", error);
-
         if (error instanceof Error) {
             throw new Error(error.message);
         }

@@ -11,20 +11,29 @@ import Link from "next/link";
 import { useState } from "react";
 import { Mail, Edit, LogOut, UserPlus } from "lucide-react";
 import { EditModal } from "@/components/profile/edit-modal";
+import { toast } from "sonner";
+import { followerUser } from "@/actions/user-action";
 
 interface IProfileDetail {
     data: TUser;
 }
 
 const ProfileDetail = ({ data }: IProfileDetail) => {
-    const [isFollowing, setIsFollowing] = useState(data.is_following);
+    const [isFollowing, setIsFollowing] = useState<boolean>(
+        data.is_following || false
+    );
     const [totalFollowers, setTotalFollowers] = useState(data.total_followers);
     const [isEdit, setIsEdit] = useState<boolean>(false);
 
-    const handleFollowToggle = () => {
+    const handleFollowToggle = async () => {
         // Toggle the following state and adjust follower count
-        setIsFollowing((prev) => !prev);
-        setTotalFollowers((prev) => (isFollowing ? prev - 1 : prev + 1));
+        if (!data.my_user_id) {
+            toast.warning("User not logged in");
+        } else {
+            setIsFollowing((prev) => !prev);
+            setTotalFollowers((prev) => (isFollowing ? prev - 1 : prev + 1));
+            await followerUser({ ...data, isFollowing });
+        }
     };
 
     const handleOpenModal = () => {

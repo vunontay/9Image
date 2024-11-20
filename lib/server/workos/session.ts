@@ -13,7 +13,6 @@ export async function getUser() {
     const encryptedSession = await cookieStore.get(cookieName);
 
     if (!encryptedSession) {
-        console.log("No session cookie found");
         return null;
     }
 
