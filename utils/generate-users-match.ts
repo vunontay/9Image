@@ -21,4 +21,8 @@ export function generateUsersMatch(query: { [key: string]: string }) {
     if (page === "follower") {
         return { followings: new Types.ObjectId(id), ...paginationUpdatedAt };
     }
+
+    if (page === "users") {
+        return paginationId;
+    }
 }

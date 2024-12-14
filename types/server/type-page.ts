@@ -3,4 +3,14 @@ export type TProfilePage =
     | "following"
     | "public"
     | "private"
-    | "favorite";
+    | "favorite"
+    | "users";
+
+export type TSearchPage =
+    | "users"
+    | "public"
+    | "private"
+    | "favorite"
+    | "home"
+    | "photos"
+    | "search";

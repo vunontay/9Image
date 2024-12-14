@@ -1,4 +1,4 @@
-import { Upload } from "@/app/(main)/upload/(form)/_components/upload";
+import { Upload } from "@/components/photo/upload";
 import { H1, H2, H3 } from "@/components/shared/title";
 import { Metadata } from "next";
 

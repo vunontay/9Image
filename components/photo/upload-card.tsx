@@ -7,12 +7,16 @@ import { Lock, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { InputTags } from "@/components/custom/input-tags";
 import Image from "next/image";
-import React from "react";
+import React, { useTransition } from "react";
+import { updatePhoto } from "@/actions/photos-action";
+import { toast } from "sonner";
+import { TPhotoData } from "@/types/client/type-photo";
 
 interface IUploadCard {
     setFiles: React.Dispatch<React.SetStateAction<TFileResult[]>>;
     file: TFileResult;
     index: number;
+    setIsEdit?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 interface ValidationInput {
@@ -41,8 +45,18 @@ const validate = ({ title, tags }: ValidationInput): ValidationStatus => {
     return errors.title || errors.tags ? "error" : "success";
 };
 
-const UploadCardComponent = ({ setFiles, file, index }: IUploadCard) => {
+const UploadCardComponent = ({
+    setFiles,
+    file,
+    index,
+    setIsEdit,
+}: IUploadCard) => {
+    const [isPending, startTransition] = useTransition();
+
     const handleRemove = () => {
+        if (setIsEdit) {
+            return setIsEdit(false);
+        }
         setFiles((prevFiles) => prevFiles.filter((_, i) => i !== index));
     };
 
@@ -90,7 +104,21 @@ const UploadCardComponent = ({ setFiles, file, index }: IUploadCard) => {
         );
     };
 
-    const isLoading = false;
+    const handleUpdatePhoto = () => {
+        if (isPending || file.status === "error") return;
+
+        startTransition(async () => {
+            const response = await updatePhoto(file as unknown as TPhotoData);
+            if (response.success) {
+                toast.success(response.message);
+                if (setIsEdit) {
+                    setIsEdit(false);
+                }
+            } else {
+                toast.error(response.message);
+            }
+        });
+    };
 
     return (
         <div
@@ -117,12 +145,7 @@ const UploadCardComponent = ({ setFiles, file, index }: IUploadCard) => {
                 width={280}
                 height={280}
                 title={file.title || "Uploaded file"}
-                className={cn(
-                    "object-cover w-full rounded-lg overflow-hidden",
-                    isLoading
-                        ? "scale-110 blur-2xl grayscale"
-                        : "scale-100 blur-0 grayscale-0"
-                )}
+                className={cn("object-cover w-full rounded-lg overflow-hidden")}
             />
 
             {file.status === "error" && file.message ? (
@@ -172,6 +195,16 @@ const UploadCardComponent = ({ setFiles, file, index }: IUploadCard) => {
                     </div>
                 </div>
             )}
+            {setIsEdit ? (
+                <Button
+                    className="mt-6 flex w-full"
+                    type="submit"
+                    disabled={isPending || file.status === "error"}
+                    onClick={handleUpdatePhoto}
+                >
+                    {isPending ? "Loading..." : `Update a photo`}
+                </Button>
+            ) : null}
         </div>
     );
 };

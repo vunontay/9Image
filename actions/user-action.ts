@@ -168,10 +168,11 @@ export async function generateUsersPipeline({
     sort,
     limit,
     match,
+    search,
 }: Record<string, unknown>): Promise<PipelineStage[]> {
     const user = await getUser();
     const userId = user ? new Types.ObjectId(user?._id) : undefined;
-
+    console.log(limit);
     const basePipeline: PipelineStage[] = [
         {
             $sort: sort === "_id" ? { _id: -1 } : { updatedAt: -1 },
@@ -200,6 +201,57 @@ export async function generateUsersPipeline({
         },
     ];
 
+    const searchPipeline: PipelineStage[] = [
+        {
+            $search: {
+                index: "searchUsers",
+                text: {
+                    query: search,
+                    path: "name",
+                    fuzzy: {
+                        prefixLength: 3,
+                    },
+                },
+            },
+        },
+    ];
+    if (search) {
+        return [...searchPipeline, ...basePipeline];
+    }
+
+    return basePipeline;
+}
+
+export async function generateUsersCountPipeline({
+    match,
+    search,
+}: Record<string, unknown>): Promise<PipelineStage[]> {
+    const basePipeline: PipelineStage[] = [
+        {
+            $match: match || {},
+        },
+        {
+            $count: "total",
+        },
+    ];
+
+    const searchPipeline: PipelineStage[] = [
+        {
+            $search: {
+                index: "searchUsers",
+                text: {
+                    query: search,
+                    path: "name",
+                    fuzzy: {
+                        prefixLength: 3,
+                    },
+                },
+            },
+        },
+    ];
+    if (search) {
+        return [...searchPipeline, ...basePipeline];
+    }
     return basePipeline;
 }
 
@@ -208,13 +260,20 @@ export async function generateUsersPipeline({
 export async function getUsers(query: {
     [key: string]: string;
 }): Promise<{ users: TUser[]; nextCursor: string | number }> {
-    await mongooseConnect();
     try {
+        await mongooseConnect();
+        const search = query.search;
+
         const sort = query.sort || "_id";
         const limit = parseInt(query.limit, 10) || 5;
 
         const match = generateUsersMatch(query);
-        const pipeline = await generateUsersPipeline({ sort, limit, match });
+        const pipeline = await generateUsersPipeline({
+            sort,
+            limit,
+            match,
+            search,
+        });
 
         const users = JSON.parse(
             JSON.stringify(await UserModel.aggregate(pipeline))
@@ -233,5 +292,31 @@ export async function getUsers(query: {
         }
 
         throw new Error("An error occurred while getting the users");
+    }
+}
+
+// ---------------------------GET USER COUNT ----------------------------
+
+export async function getUsersCount(query: { [key: string]: string }) {
+    try {
+        await mongooseConnect();
+        const search = query.search;
+        const match = generateUsersMatch(query);
+        const pipeline = await generateUsersCountPipeline({ match, search });
+
+        const [result] = JSON.parse(
+            JSON.stringify(await UserModel.aggregate(pipeline))
+        );
+
+        return {
+            success: true,
+            data: result?.total || 0,
+        };
+    } catch (error) {
+        if (error instanceof Error) {
+            throw new Error(error.message);
+        }
+
+        throw new Error("An error occurred");
     }
 }

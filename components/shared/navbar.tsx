@@ -1,4 +1,4 @@
-import { SearchForm } from "@/app/(main)/_components/search-form";
+import { SearchForm } from "@/components/search/search-form";
 import { MainLogo } from "@/components/shared/logo";
 import {
     LoginButton,

@@ -1,6 +1,6 @@
 import { useState, useMemo, useTransition } from "react";
 import { TFileResult } from "@/types/client/type-file";
-import { uploadImage } from "@/app/(main)/upload/(form)/upload-action";
+import { uploadImage } from "@/components/photo/upload-action";
 import { toast } from "sonner";
 
 const useUploadImages = () => {

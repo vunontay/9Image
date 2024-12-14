@@ -8,11 +8,13 @@ import { generateNextCursor } from "@/utils/generate-next-cursor";
 import PhotoModel from "@/models/photo-model";
 import mongooseConnect from "@/lib/server/mongoose/mongoose";
 import { revalidatePath } from "next/cache";
+import { destroyFromCloudinary } from "@/lib/server/cloudinary/cloudinary";
 
 export async function generatePhotosPipeline({
     sort,
     limit,
     match,
+    search,
 }: Record<string, unknown>): Promise<PipelineStage[]> {
     const user = await getUser();
     const userId = user ? new Types.ObjectId(user?._id) : undefined;
@@ -65,11 +67,31 @@ export async function generatePhotosPipeline({
         },
     ];
 
+    const searchPipeline: PipelineStage[] = [
+        {
+            $search: {
+                index: "searchPhotos",
+                text: {
+                    query: search,
+                    path: ["title", "tags"],
+                    fuzzy: {
+                        prefixLength: 3,
+                    },
+                },
+            },
+        },
+    ];
+
+    if (search) {
+        return [...searchPipeline, ...basePipeline];
+    }
+
     return basePipeline;
 }
 
 export async function generatePhotosCountPipeline({
     match,
+    search,
 }: Record<string, unknown>): Promise<PipelineStage[]> {
     const basePipeline: PipelineStage[] = [
         {
@@ -80,6 +102,23 @@ export async function generatePhotosCountPipeline({
         },
     ];
 
+    const searchPipeline: PipelineStage[] = [
+        {
+            $search: {
+                index: "searchPhotos",
+                text: {
+                    query: search,
+                    path: ["title", "tags"],
+                    fuzzy: {
+                        prefixLength: 3,
+                    },
+                },
+            },
+        },
+    ];
+    if (search) {
+        return [...searchPipeline, ...basePipeline];
+    }
     return basePipeline;
 }
 
@@ -89,13 +128,20 @@ export async function getPhotos(query: {
     [key: string]: string;
 }): Promise<{ photos: TPhotoData[]; nextCursor: string | number }> {
     try {
+        await mongooseConnect();
+        const search = query.search;
+
         const sort = query.sort || "_id";
         const limit = parseInt(query.limit, 10) || 5;
 
-        await mongooseConnect();
         const match = generatePhotosMatch(query);
 
-        const pipeline = await generatePhotosPipeline({ sort, limit, match });
+        const pipeline = await generatePhotosPipeline({
+            sort,
+            limit,
+            match,
+            search,
+        });
 
         const photos = JSON.parse(
             JSON.stringify(await PhotoModel.aggregate(pipeline))
@@ -118,8 +164,10 @@ export async function getPhotos(query: {
 
 export async function getPhotosCount(query: { [key: string]: string }) {
     try {
+        await mongooseConnect();
+        const search = query.search;
         const match = generatePhotosMatch(query);
-        const pipeline = await generatePhotosCountPipeline({ match });
+        const pipeline = await generatePhotosCountPipeline({ match, search });
         const [result] = JSON.parse(
             JSON.stringify(await PhotoModel.aggregate(pipeline))
         );
@@ -129,13 +177,11 @@ export async function getPhotosCount(query: { [key: string]: string }) {
             data: result?.total || 0,
         };
     } catch (error) {
-        console.error("Error updating favorite photo:", error);
-
         if (error instanceof Error) {
             throw new Error(error.message);
         }
 
-        throw new Error("An error occurred while updating the favorite photo");
+        throw new Error("An error occurred");
     }
 }
 
@@ -154,8 +200,6 @@ export async function addFavoritePhoto(photo: TPhotoData) {
             });
         }
 
-        revalidatePath("/");
-
         return {
             success: true,
             message: "Favorite photo updated successfully",
@@ -166,5 +210,86 @@ export async function addFavoritePhoto(photo: TPhotoData) {
         }
 
         throw new Error("An error occurred while updating the favorite photo");
+    } finally {
+        revalidatePath("/");
+    }
+}
+
+// ---------------------------UPDATE PHOTO----------------------------
+
+export async function updatePhoto(photo: TPhotoData) {
+    try {
+        await mongooseConnect();
+        await PhotoModel.findByIdAndUpdate(photo?._id, {
+            title: photo.title,
+            tags: photo.tags,
+            public: photo.public,
+        });
+
+        revalidatePath("/");
+
+        return {
+            success: true,
+            message: "Photo update successfully",
+        };
+    } catch (error) {
+        if (error instanceof Error) {
+            throw new Error(error.message);
+        }
+
+        throw new Error("An error occurred");
+    }
+}
+
+// ---------------------------DELETE PHOTO----------------------------
+export async function deletePhoto({ _id, public_id }: TPhotoData) {
+    try {
+        await mongooseConnect();
+        await Promise.all([
+            PhotoModel.findByIdAndDelete(_id),
+            destroyFromCloudinary(public_id),
+        ]);
+
+        revalidatePath("/");
+        return {
+            success: true,
+            message: "Photo delete successfully",
+        };
+    } catch (error) {
+        if (error instanceof Error) {
+            throw new Error(error.message);
+        }
+
+        throw new Error("An error occurred");
+    }
+}
+
+export async function getPhotoById(id: string) {
+    try {
+        const [user, photo] = await Promise.all([
+            getUser(),
+            PhotoModel.findById(id).populate("user", "name avatar"),
+        ]);
+
+        if (!photo) throw new Error("Photo not found");
+
+        const newPhoto = {
+            ...photo._doc,
+            is_favorite: photo.favorite_users.includes(user?._id),
+            total_favorite: photo.favorite_users.length,
+            favorite_users: [],
+            my_user_id: user?._id,
+        };
+
+        return {
+            success: true,
+            data: JSON.parse(JSON.stringify(newPhoto)),
+        };
+    } catch (error) {
+        if (error instanceof Error) {
+            throw new Error(error.message);
+        }
+
+        throw new Error("An error occurred");
     }
 }

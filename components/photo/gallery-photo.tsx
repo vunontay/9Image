@@ -23,8 +23,7 @@ const GalleryPhoto = ({
     fetchingData,
     nextCursor,
 }: IGalleryPhoto) => {
-    const [files, setFiles] = useState<TPhotoData[] | null>(data || null);
-
+    const [files, setFiles] = useState<TPhotoData[]>(data || []);
     const [next, setNext] = useState<string | number>(nextCursor);
     const [hasMore, setHasMore] = useState<boolean>(true);
     const [isPending, startTransition] = useTransition();

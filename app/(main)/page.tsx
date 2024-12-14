@@ -7,7 +7,6 @@ export default async function HomePage() {
 
     return (
         <>
-            <div className="-mx-4 sm:-mx-8 -mt-2 sm:-mt-4 relative"></div>
             <div className="flex justify-between py-6 md:py-8">
                 <H3 title="Free Stock Photos" className="text-2xl font-bold" />
                 {/* <OrderButton /> */}

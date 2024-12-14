@@ -84,3 +84,7 @@ body {
     gap: 30px;
     margin: 40px auto;
 }
+
+.hide-scrollbar {
+    scrollbar-width: none;
+}

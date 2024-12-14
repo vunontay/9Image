@@ -1,10 +1,11 @@
 "use client";
 
-import { UploadCard } from "@/app/(main)/upload/(form)/_components/upload-card";
-import { UploadForm } from "@/app/(main)/upload/(form)/_components/upload-form";
+import { UploadCard } from "@/components/photo/upload-card";
+
 import { Button } from "@/components/ui/button";
 import { ImageIcon, Music, Video } from "lucide-react";
 import useUploadImages from "@/hooks/use-upload-image";
+import { UploadForm } from "@/components/photo/upload-form";
 
 const Upload = () => {
     const { files, setFiles, count, isPending, handleUploadImages } =

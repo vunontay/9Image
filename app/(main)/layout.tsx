@@ -1,4 +1,4 @@
-import { Navbar } from "@/app/(main)/_components/navbar";
+import { Navbar } from "@/components/shared/navbar";
 export const dynamic = "force-dynamic";
 export default async function MainLayout({
     children,

@@ -1,6 +1,6 @@
 "use client";
 
-import { SearchForm } from "@/app/(main)/_components/search-form";
+import { SearchForm } from "@/components/search/search-form";
 
 import { Button } from "@/components/ui/button";
 import {

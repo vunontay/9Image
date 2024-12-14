@@ -1,7 +1,8 @@
+import { TSearchPage } from "@/types/server/type-page";
 import { Types } from "mongoose";
 
 export function generatePhotosMatch(query: { [key: string]: string }) {
-    const page = query.page;
+    const page = query.page as TSearchPage;
     const next = query.next;
     const id = query.id;
 
@@ -29,7 +30,7 @@ export function generatePhotosMatch(query: { [key: string]: string }) {
         };
     }
 
-    if (page === "home") {
+    if (page === "home" || page === "photos") {
         return { public: true, ...paginationId };
     }
 }

@@ -22,7 +22,7 @@ interface ISearchForm {
 
 const SearchForm = ({ className }: ISearchForm) => {
     return (
-        <Form action="/search/photos">
+        <Form action="/search/photo">
             <div className={cn("flex items-center", className)}>
                 <div>
                     <Select name="type" defaultValue="photos">
