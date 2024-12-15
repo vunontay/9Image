@@ -6,13 +6,15 @@ interface IUserAvatar {
     avatarUrl: string | null | undefined;
     size?: number;
     className?: string;
+    altText?: string; // Added an optional altText prop
 }
 
-const UserAvatar = ({ avatarUrl, size, className }: IUserAvatar) => {
+const UserAvatar = ({ avatarUrl, size, className, altText }: IUserAvatar) => {
+    const isPlaceholder = !avatarUrl;
     return (
         <Image
             src={avatarUrl || avatarPlaceholder}
-            alt="User avatar"
+            alt={isPlaceholder ? "Default avatar" : altText || "User avatar"} // Provide dynamic alt text
             width={size ?? 48}
             height={size ?? 48}
             className={cn(

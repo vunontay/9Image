@@ -5,6 +5,7 @@ import { Spinner } from "@/components/shared/spinner";
 import { TUser } from "@/types/client/type-user";
 import React, { useEffect, useState, useTransition } from "react";
 import useInView from "@/hooks/use-in-view";
+import { AlertCircle } from "lucide-react";
 
 interface IListOfUser {
     data: TUser[] | null;
@@ -50,10 +51,20 @@ const ListOfUser = ({ data, query, fetchingData, nextCursor }: IListOfUser) => {
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [inView, hasMore]);
+
+    if (!users || users.length === 0) {
+        return (
+            <div className="flex flex-col items-center justify-center py-10 text-muted-foreground">
+                <AlertCircle className="w-10 h-10 mb-2" />
+                <p>No users found</p>
+            </div>
+        );
+    }
+
     return (
         <div className="container mx-auto">
             <div className="grid grid-cols-2 gap-5">
-                {users?.map((user) => (
+                {users.map((user) => (
                     <CardUser key={user._id} user={user} />
                 ))}
             </div>

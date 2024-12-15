@@ -10,7 +10,7 @@ interface IProfileFollow {
     id: string;
     page: TProfilePage;
 }
-
+export const dynamic = "force-dynamic";
 const ProfileFollow = async ({ id, page }: IProfileFollow) => {
     if (page !== "follower" && page !== "following") return null;
 
@@ -24,6 +24,7 @@ const ProfileFollow = async ({ id, page }: IProfileFollow) => {
                 className="text-2xl font-bold py-4 border-b-2"
             />
             <ListOfUser
+                key={`${id}-${page}`}
                 data={data}
                 nextCursor={nextCursor}
                 fetchingData={getUsers}

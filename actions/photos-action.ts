@@ -9,6 +9,7 @@ import PhotoModel from "@/models/photo-model";
 import mongooseConnect from "@/lib/server/mongoose/mongoose";
 import { revalidatePath } from "next/cache";
 import { destroyFromCloudinary } from "@/lib/server/cloudinary/cloudinary";
+import { cache } from "react";
 
 export async function generatePhotosPipeline({
     sort,
@@ -21,7 +22,23 @@ export async function generatePhotosPipeline({
 
     const basePipeline: PipelineStage[] = [
         {
-            $sort: sort === "_id" ? { _id: -1 } : { updatedAt: -1 },
+            $sort: (() => {
+                const sortObj: Record<string, -1> = {};
+                switch (sort) {
+                    case "newest":
+                        sortObj.createdAt = -1;
+                        break;
+                    case "popular":
+                        sortObj.total_favorite = -1;
+                        break;
+                    case "trending":
+                        sortObj.views = -1;
+                        break;
+                    default:
+                        sortObj._id = -1;
+                }
+                return sortObj;
+            })(),
         },
         {
             $match: match || {},
@@ -124,41 +141,48 @@ export async function generatePhotosCountPipeline({
 
 // ---------------------------GET PHOTOS----------------------------
 
-export async function getPhotos(query: {
-    [key: string]: string;
-}): Promise<{ photos: TPhotoData[]; nextCursor: string | number }> {
-    try {
-        await mongooseConnect();
-        const search = query.search;
+export const getPhotos = cache(
+    async (query: {
+        [key: string]: string;
+    }): Promise<{ photos: TPhotoData[]; nextCursor: string | number }> => {
+        try {
+            await mongooseConnect();
+            const search = query.search;
 
-        const sort = query.sort || "_id";
-        const limit = parseInt(query.limit, 10) || 5;
+            const sort = query.sort || "newest";
+            const limit = parseInt(query.limit, 10) || 5;
 
-        const match = generatePhotosMatch(query);
+            const match = generatePhotosMatch(query);
 
-        const pipeline = await generatePhotosPipeline({
-            sort,
-            limit,
-            match,
-            search,
-        });
+            const pipeline = await generatePhotosPipeline({
+                sort,
+                limit,
+                match,
+                search,
+            });
 
-        const photos = JSON.parse(
-            JSON.stringify(await PhotoModel.aggregate(pipeline))
-        ) as TPhotoData[];
+            const photos = JSON.parse(
+                JSON.stringify(await PhotoModel.aggregate(pipeline))
+            ) as TPhotoData[];
 
-        const nextCursor = generateNextCursor({ sort, limit, data: photos });
-        return {
-            photos,
-            nextCursor,
-        };
-    } catch {
-        return {
-            photos: [],
-            nextCursor: "stop",
-        };
+            const nextCursor = generateNextCursor({
+                sort,
+                limit,
+                data: photos,
+            });
+
+            return {
+                photos,
+                nextCursor,
+            };
+        } catch {
+            return {
+                photos: [],
+                nextCursor: "stop",
+            };
+        }
     }
-}
+);
 
 // ---------------------------GET PHOTOS COUNT ----------------------------
 
@@ -212,6 +236,7 @@ export async function addFavoritePhoto(photo: TPhotoData) {
         throw new Error("An error occurred while updating the favorite photo");
     } finally {
         revalidatePath("/");
+        revalidatePath(`/profile/${photo._id}/favorite`);
     }
 }
 

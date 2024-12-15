@@ -22,6 +22,7 @@ const Navbar = async () => {
                     <MenubarButton
                         className="lg:hidden"
                         aria-label="Open menu"
+                        tabIndex={0}
                     />
 
                     {user ? (

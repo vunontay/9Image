@@ -147,7 +147,7 @@ export async function followerUser({
                 }),
             ]);
         }
-        revalidatePath("/");
+        revalidatePath("/profile/[...slug]");
         return {
             status: true,
             message: "Follow user success",

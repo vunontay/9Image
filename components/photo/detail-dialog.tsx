@@ -21,7 +21,6 @@ interface IDetailDialog {
     onClose: () => void;
     photo: TPhotoData;
     onAddFavorite: (photo: TPhotoData) => Promise<void>;
-    type: unknown;
 }
 
 const DetailDialog = ({
@@ -29,7 +28,6 @@ const DetailDialog = ({
     onClose,
     photo,
     onAddFavorite,
-    type,
 }: IDetailDialog) => {
     const [isPending, startTransition] = useTransition();
     const [isFavorite, setIsFavorite] = useState(photo.is_favorite);
@@ -72,21 +70,20 @@ const DetailDialog = ({
                             </span>
                         </Link>
                         <div className="flex items-center gap-2 pr-4">
-                            {type === "" && (
-                                <Button
-                                    asChild
-                                    variant="outline"
-                                    size="icon"
-                                    className="rounded-full"
-                                    aria-label="Share photo"
+                            <Button
+                                asChild
+                                variant="outline"
+                                size="icon"
+                                className="rounded-full"
+                                aria-label="Share photo"
+                            >
+                                <Link
+                                    href={`/photo/${photo._id}?s=${photo.slug}`}
                                 >
-                                    <Link
-                                        href={`/photo/${photo._id}?s=${photo.slug}`}
-                                    >
-                                        <Share className="h-4 w-4" />
-                                    </Link>
-                                </Button>
-                            )}
+                                    <Share className="h-4 w-4" />
+                                </Link>
+                            </Button>
+
                             <Button
                                 variant="outline"
                                 size="icon"

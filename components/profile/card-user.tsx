@@ -46,8 +46,6 @@ const CardUserComponent = ({ user }: ICardUser) => {
         setIsFollowing((prev) => !prev);
 
         await followerUser({ ...user, isFollowing });
-        // window.location.reload();
-        router.push(`/profile/${user._id}`);
         router.refresh();
     };
 
@@ -87,12 +85,12 @@ const CardUserComponent = ({ user }: ICardUser) => {
                                 </Link>
                             </DropdownMenuItem>
                             <DropdownMenuItem onClick={handleFollowToggle}>
-                                {user.is_following ? (
+                                {isFollowing ? (
                                     <UserRoundMinus />
                                 ) : (
                                     <UserRoundCheck />
                                 )}
-                                {user.is_following ? "Unfollow" : "Follow"}
+                                {isFollowing ? "Unfollow" : "Follow"}
                             </DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>

@@ -3,7 +3,8 @@ import { CardPhoto } from "@/components/photo/card-photo";
 import { Spinner } from "@/components/shared/spinner";
 import { TPhotoData } from "@/types/client/type-photo";
 import useInView from "@/hooks/use-in-view";
-import React, { useEffect, useState, useTransition } from "react";
+import React, { useEffect, useState, useTransition, useMemo } from "react";
+import { optimizeImageUrl } from "@/utils/optimize-image-url";
 
 interface IGalleryPhoto {
     data: TPhotoData[] | null;
@@ -54,12 +55,20 @@ const GalleryPhoto = ({
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [inView, hasMore]);
+
+    const memoizedPhotos = useMemo(() => {
+        return files.map((photo) => ({
+            ...photo,
+            optimizedUrl: optimizeImageUrl(photo.imgUrl),
+        }));
+    }, [files]);
+
     return (
         <div className="container mx-auto">
             <div className="masonry">
-                {files?.map((file, index) => (
+                {memoizedPhotos?.map((file, index) => (
                     <CardPhoto
-                        key={file._id}
+                        key={`${file._id}-${index}`}
                         photo={file}
                         setPhotos={setFiles}
                         index={index}

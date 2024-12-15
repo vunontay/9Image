@@ -91,9 +91,12 @@ const CardPhotoComponent = ({ photo, setPhotos, index }: ICardPhoto) => {
                         alt={photo.title}
                         width={200}
                         height={280}
-                        sizes="60vw"
+                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                         placeholder="blur"
                         blurDataURL={photo.blurHash}
+                        priority={index < 4}
+                        quality={75}
+                        loading={index < 4 ? "eager" : "lazy"}
                         className="object-cover w-full min-h-[360px] rounded-lg overflow-hidden duration-700 ease-in-out group-hover:scale-110"
                     />
                     <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
@@ -106,7 +109,10 @@ const CardPhotoComponent = ({ photo, setPhotos, index }: ICardPhoto) => {
                                 size="icon"
                                 className="rounded-full bg-white/80 hover:bg-white"
                                 aria-label="Edit"
-                                onClick={handleEdit}
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleEdit();
+                                }}
                             >
                                 <FilePenLine className="h-4 w-4 text-gray-700" />
                             </Button>
@@ -115,7 +121,10 @@ const CardPhotoComponent = ({ photo, setPhotos, index }: ICardPhoto) => {
                                 size="icon"
                                 className="rounded-full bg-white/80 hover:bg-white"
                                 aria-label="Delete"
-                                onClick={handleDeletePhoto}
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleDeletePhoto();
+                                }}
                             >
                                 <CircleX className="h-4 w-4 text-gray-700" />
                             </Button>
@@ -126,7 +135,10 @@ const CardPhotoComponent = ({ photo, setPhotos, index }: ICardPhoto) => {
                         size="icon"
                         className="rounded-full bg-white/80 hover:bg-white"
                         aria-label="Add to favorites"
-                        onClick={() => handleAddFavoritePhoto(photo)}
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            handleAddFavoritePhoto(photo);
+                        }}
                     >
                         <Heart
                             className={cn(
@@ -172,7 +184,6 @@ const CardPhotoComponent = ({ photo, setPhotos, index }: ICardPhoto) => {
                 onClose={() => setIsDetailOpen(false)}
                 photo={photo}
                 onAddFavorite={handleAddFavoritePhoto}
-                type={"a"}
             />
         </>
     );

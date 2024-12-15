@@ -1,10 +1,6 @@
+"use client";
 import { Input } from "@/components/ui/input";
-import {
-    FolderClosed,
-    Image as ImageIcon,
-    SearchIcon,
-    SquareUserRound,
-} from "lucide-react";
+import { Image as ImageIcon, SearchIcon, SquareUserRound } from "lucide-react";
 import {
     Select,
     SelectContent,
@@ -13,16 +9,29 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import Form from "next/form";
 import { cn } from "@/lib/utils";
+import { useRouter } from "next/navigation";
+import Form from "next/form";
 
 interface ISearchForm {
     className?: string;
 }
 
 const SearchForm = ({ className }: ISearchForm) => {
+    const router = useRouter();
+
+    const handleSearch = async (formData: FormData) => {
+        const type = formData.get("type");
+        const query = formData.get("query")?.toString().trim();
+
+        if (!query) return;
+
+        const encodedQuery = encodeURIComponent(query);
+        router.push(`/search/${type}/${encodedQuery}`);
+    };
+
     return (
-        <Form action="/search/photo">
+        <Form action={handleSearch}>
             <div className={cn("flex items-center", className)}>
                 <div>
                     <Select name="type" defaultValue="photos">
@@ -42,15 +51,7 @@ const SearchForm = ({ className }: ISearchForm) => {
                                     <span>Photos</span>
                                 </div>
                             </SelectItem>
-                            <SelectItem value="collections">
-                                <div className="flex items-center gap-2">
-                                    <FolderClosed
-                                        className="w-4 h-4"
-                                        aria-hidden="true"
-                                    />
-                                    <span>Collections</span>
-                                </div>
-                            </SelectItem>
+
                             <SelectItem value="users">
                                 <div className="flex items-center gap-2">
                                     <SquareUserRound
@@ -72,6 +73,7 @@ const SearchForm = ({ className }: ISearchForm) => {
                         name="query"
                         placeholder="Search image..."
                         className="pe-10 border-l-0 rounded-l-none focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0 w-full"
+                        required
                     />
                     <Button
                         type="submit"

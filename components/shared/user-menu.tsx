@@ -51,6 +51,8 @@ import { toast } from "sonner";
 
 interface IUserMenu {
     className?: string;
+    "aria-label"?: string;
+    tabIndex?: number;
     user?: TUser | null;
 }
 
@@ -65,25 +67,25 @@ const LoginButton = ({ className }: IUserMenu) => {
 };
 
 const LogoutButton = ({ className }: IUserMenu) => {
+    const router = useRouter();
+
     const handleLogout = async () => {
         const response = await logout();
-
         if (response && response.success) {
             toast.success(response.message);
+            router.refresh();
         } else {
             toast.error("Logout failed!");
         }
     };
 
     return (
-        <>
-            <Form className={className} action={handleLogout}>
-                <Button type="submit">
-                    <LogOutIcon className={"mr-2 size-4"} />
-                    logout
-                </Button>
-            </Form>
-        </>
+        <Form className={className} action={handleLogout}>
+            <Button type="submit">
+                <LogOutIcon className={"mr-2 size-4"} />
+                logout
+            </Button>
+        </Form>
     );
 };
 

@@ -57,9 +57,7 @@ export default async function PhotoDetailPage({
                         </Avatar>
                         <div>
                             <h3 className="font-medium">@{photo.user.name}</h3>
-                            <p className="text-sm text-gray-500">
-                                Author
-                            </p>
+                            <p className="text-sm text-gray-500">Author</p>
                         </div>
                     </Link>
                 </div>
@@ -67,7 +65,7 @@ export default async function PhotoDetailPage({
                 {/* Photo Info */}
                 <div className="p-4 bg-white rounded-lg border shadow-sm space-y-4">
                     <div>
-                        <h2 className="font-semibold text-xl mb-2">
+                        <h2 className="font-semibold text-xl mb-2 truncate">
                             {photo.title}
                         </h2>
                         <p className="text-sm text-gray-500">
