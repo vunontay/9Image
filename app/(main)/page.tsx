@@ -19,7 +19,10 @@ export default async function HomePage({
     return (
         <>
             <div className="flex justify-between items-center py-6 md:py-8">
-                <H3 title="Free Stock Photos" className="text-2xl font-bold" />
+                <H3
+                    title="Free Stock Photos"
+                    className="text-xl md:text-2xl font-bold"
+                />
                 <OrderButton />
             </div>
             <GalleryPhoto

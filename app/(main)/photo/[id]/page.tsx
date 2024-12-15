@@ -25,7 +25,7 @@ export default async function PhotoDetailPage({
         <div className="grid lg:grid-cols-5 gap-8">
             {/* Main Image Section */}
             <div className="lg:col-span-4 space-y-4">
-                <div className="relative aspect-[4/3] w-full overflow-hidden rounded-lg border bg-gray-50">
+                <div className="relative aspect-[4/3] w-full overflow-hidden rounded-lg border bg-muted">
                     <Image
                         src={photo.imgUrl}
                         alt={photo.title}
@@ -41,7 +41,7 @@ export default async function PhotoDetailPage({
             {/* Sidebar Info */}
             <div className="lg:col-span-1 space-y-6 lg:sticky lg:top-4 lg:self-start">
                 {/* User Info */}
-                <div className="p-4 bg-white rounded-lg border shadow-sm">
+                <div className="p-4 bg-card rounded-lg border shadow-sm">
                     <Link
                         href={`/profile/${photo.user._id}`}
                         className="flex items-center space-x-3 hover:opacity-80 transition-opacity"
@@ -57,18 +57,20 @@ export default async function PhotoDetailPage({
                         </Avatar>
                         <div>
                             <h3 className="font-medium">@{photo.user.name}</h3>
-                            <p className="text-sm text-gray-500">Author</p>
+                            <p className="text-sm text-muted-foreground">
+                                Author
+                            </p>
                         </div>
                     </Link>
                 </div>
 
                 {/* Photo Info */}
-                <div className="p-4 bg-white rounded-lg border shadow-sm space-y-4">
+                <div className="p-4 bg-card rounded-lg border shadow-sm space-y-4">
                     <div>
                         <h2 className="font-semibold text-xl mb-2 truncate">
                             {photo.title}
                         </h2>
-                        <p className="text-sm text-gray-500">
+                        <p className="text-sm text-muted-foreground">
                             Published on {formatDate(photo.createdAt)}
                         </p>
                     </div>
@@ -94,17 +96,19 @@ export default async function PhotoDetailPage({
                 </div>
 
                 {/* Image Details */}
-                <div className="p-4 bg-white rounded-lg border shadow-sm">
+                <div className="p-4 bg-card rounded-lg border shadow-sm">
                     <h3 className="font-medium mb-3">Image Details</h3>
                     <dl className="space-y-2 text-sm">
                         <div className="flex justify-between">
-                            <dt className="text-gray-500">Type</dt>
+                            <dt className="text-muted-foreground">Type</dt>
                             <dd className="font-medium">
                                 {photo.imgName.split(".").pop()?.toUpperCase()}
                             </dd>
                         </div>
                         <div className="flex justify-between">
-                            <dt className="text-gray-500">Visibility</dt>
+                            <dt className="text-muted-foreground">
+                                Visibility
+                            </dt>
                             <dd className="font-medium">
                                 {photo.public ? "Public" : "Private"}
                             </dd>

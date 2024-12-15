@@ -28,7 +28,6 @@ import {
     Check,
     LogOutIcon,
     Menu,
-    Monitor,
     Moon,
     Palette,
     Sun,
@@ -66,7 +65,7 @@ const LoginButton = ({ className }: IUserMenu) => {
     );
 };
 
-const LogoutButton = ({ className }: IUserMenu) => {
+const LogoutButton = ({ className, ...props }: IUserMenu) => {
     const router = useRouter();
 
     const handleLogout = async () => {
@@ -80,10 +79,16 @@ const LogoutButton = ({ className }: IUserMenu) => {
     };
 
     return (
-        <Form className={className} action={handleLogout}>
-            <Button type="submit">
-                <LogOutIcon className={"mr-2 size-4"} />
-                logout
+        <Form action={handleLogout}>
+            <Button
+                {...props}
+                className={cn("w-full gap-2", className)}
+                type="submit"
+                variant="outline"
+                size="sm"
+            >
+                Logout
+                <LogOutIcon className={"size-4"} />
             </Button>
         </Form>
     );
@@ -108,42 +113,119 @@ const UploadButton = ({ className, user }: IUserMenu) => {
     );
 };
 
-const MenubarButton = ({ className }: IUserMenu) => {
+const MenubarButton = ({ className, user }: IUserMenu) => {
+    const { theme, setTheme } = useTheme();
+    const router = useRouter();
+
+    const switchLanguage = (lang: string) => {
+        router.push(`/${lang}`);
+    };
+
     return (
-        <>
-            <Sheet>
-                <SheetTrigger asChild>
-                    <Button
-                        className={className}
-                        variant={"outline"}
-                        size={"icon"}
-                    >
-                        <Menu />
-                    </Button>
-                </SheetTrigger>
-                <SheetContent side={"left"} className="w-[400px] sm:w-[540px]">
-                    <SheetHeader>
-                        <SheetTitle className="border-b pb-2">
-                            <MainLogo />
-                        </SheetTitle>
-                    </SheetHeader>
-                    <div className="h-full">
+        <Sheet>
+            <SheetTrigger asChild>
+                <Button className={className} variant="outline" size="icon">
+                    <Menu />
+                </Button>
+            </SheetTrigger>
+            <SheetContent side="left" className="w-[400px] sm:w-[540px] p-0">
+                <SheetHeader className="px-4 py-2">
+                    <SheetTitle className="border-b pb-2">
+                        <MainLogo />
+                    </SheetTitle>
+                </SheetHeader>
+                <div className="flex flex-col h-[calc(100vh-80px)] overflow-hidden">
+                    <div className="flex-1 overflow-y-auto px-4">
                         <H3
                             title="Search for free photos"
                             className="text-xl font-semibold py-2 mt-4 text-center"
                         />
                         <SearchForm />
 
-                        <div className="absolute w-full bottom-4 px-6 pt-2 left-0 border-t">
-                            <div className="flex items-center justify-end gap-2 sm:gap-2">
-                                <LoginButton />
-                                <UploadButton />
+                        {/* Theme Switcher */}
+                        <div className="mt-4 px-2">
+                            <h4 className="mb-2 text-sm font-medium">Theme</h4>
+                            <div className="flex gap-2">
+                                <Button
+                                    variant={
+                                        theme === "light"
+                                            ? "default"
+                                            : "outline"
+                                    }
+                                    size="sm"
+                                    onClick={() => setTheme("light")}
+                                    className="w-24"
+                                >
+                                    <Sun className="mr-2 size-4" />
+                                    Light
+                                </Button>
+                                <Button
+                                    variant={
+                                        theme === "dark" ? "default" : "outline"
+                                    }
+                                    size="sm"
+                                    onClick={() => setTheme("dark")}
+                                    className="w-24"
+                                >
+                                    <Moon className="mr-2 size-4" />
+                                    Dark
+                                </Button>
+                            </div>
+                        </div>
+
+                        {/* Language Switcher */}
+                        <div className="mt-4 px-2">
+                            <h4 className="mb-2 text-sm font-medium">
+                                Language
+                            </h4>
+                            <div className="flex gap-2">
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={() => switchLanguage("en")}
+                                    className="w-24"
+                                >
+                                    🇺🇸 English
+                                </Button>
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={() => switchLanguage("vi")}
+                                    className="w-24"
+                                >
+                                    🇻🇳 Tiếng Việt
+                                </Button>
                             </div>
                         </div>
                     </div>
-                </SheetContent>
-            </Sheet>
-        </>
+
+                    {/* Fixed Bottom Actions */}
+                    <div className="mt-auto border-t p-4 bg-background">
+                        <div className="flex items-center  gap-2">
+                            {user ? (
+                                <>
+                                    <Link href={`/profile/${user._id}`}>
+                                        <Button
+                                            variant="outline"
+                                            className="w-full gap-2"
+                                        >
+                                            <UserIcon className="size-4" />
+                                            Profile
+                                        </Button>
+                                    </Link>
+                                    <LogoutButton />
+                                </>
+                            ) : (
+                                <>
+                                    <LoginButton />
+                                    <UploadButton user={user} />
+                                </>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            </SheetContent>
+        </Sheet>
     );
 };
 
@@ -186,15 +268,6 @@ const UserButton = ({ className, user }: IUserMenu) => {
 
                     <DropdownMenuPortal>
                         <DropdownMenuSubContent>
-                            <DropdownMenuItem
-                                onClick={() => setTheme("system")}
-                            >
-                                <Monitor className="mr-2 size-4" />
-                                System
-                                {theme === "system" && (
-                                    <Check className="ms-2 size-4" />
-                                )}
-                            </DropdownMenuItem>
                             <DropdownMenuItem onClick={() => setTheme("light")}>
                                 <Sun className="mr-2 size-4" />
                                 Light
@@ -235,7 +308,7 @@ const UserButton = ({ className, user }: IUserMenu) => {
 
                 <DropdownMenuSeparator />
                 <DropdownMenuItem>
-                    <LogoutButton />
+                    <LogoutButton className="w-full" />
                 </DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu>

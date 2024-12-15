@@ -25,7 +25,7 @@ const ProfileMenu = async ({ id, page, userId }: IProfileMenu) => {
 
     return (
         <Tabs value={page} className="w-full mt-4">
-            <TabsList className="border-2">
+            <TabsList>
                 {pages.map((tabPage) => {
                     if (id !== userId && tabPage !== "public") return null;
 

@@ -63,7 +63,7 @@ const ListOfUser = ({ data, query, fetchingData, nextCursor }: IListOfUser) => {
 
     return (
         <div className="container mx-auto">
-            <div className="grid grid-cols-2 gap-5">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 {users.map((user) => (
                     <CardUser key={user._id} user={user} />
                 ))}

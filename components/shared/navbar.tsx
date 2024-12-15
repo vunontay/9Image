@@ -23,6 +23,7 @@ const Navbar = async () => {
                         className="lg:hidden"
                         aria-label="Open menu"
                         tabIndex={0}
+                        user={user}
                     />
 
                     {user ? (
@@ -31,10 +32,7 @@ const Navbar = async () => {
                         <LoginButton />
                     )}
 
-                    <UploadButton
-                        user={user}
-                        className="hidden lg:block ml-2"
-                    />
+                    <UploadButton user={user} className="hidden lg:block" />
                 </nav>
             </div>
         </header>

@@ -9,10 +9,11 @@ import { TUser } from "@/types/client/type-user";
 import { formatNumber } from "@/utils/format-number";
 import Link from "next/link";
 import { useState } from "react";
-import { Mail, Edit, LogOut, UserPlus } from "lucide-react";
+import { Mail, Edit, UserPlus } from "lucide-react";
 import { EditModal } from "@/components/profile/edit-modal";
 import { toast } from "sonner";
 import { followerUser } from "@/actions/user-action";
+import { LogoutButton } from "@/components/shared/user-menu";
 
 interface IProfileDetail {
     data: TUser;
@@ -92,19 +93,17 @@ const ProfileDetail = ({ data }: IProfileDetail) => {
 
                             {/* Check if the logged-in user is viewing their own profile */}
                             {data._id === data.my_user_id ? (
-                                <div className="space-x-2">
+                                <div className="flex gap-2">
                                     <Button
                                         onClick={handleOpenModal}
                                         variant="outline"
                                         size="sm"
                                     >
-                                        <Edit className="w-4 h-4 mr-2" /> Edit
-                                        Profile
+                                        {" "}
+                                        Edit Profile
+                                        <Edit className="w-4 h-4" />
                                     </Button>
-                                    <Button variant="outline" size="sm">
-                                        <LogOut className="w-4 h-4 mr-2" />{" "}
-                                        Logout
-                                    </Button>
+                                    <LogoutButton />
                                 </div>
                             ) : (
                                 <Button

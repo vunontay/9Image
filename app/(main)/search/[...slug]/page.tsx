@@ -22,7 +22,7 @@ export default async function SearchPage({
             <div className="flex justify-between py-6 md:py-8">
                 <H1
                     title={`Result for ${search}`}
-                    className="text-2xl font-bold"
+                    className="text-xl md:text-2xl font-bold"
                 />
             </div>
             <SearchMenu
