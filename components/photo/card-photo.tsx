@@ -88,7 +88,7 @@ const CardPhotoComponent = ({ photo, setPhotos, index }: ICardPhoto) => {
                 <div className="relative aspect-square">
                     <Image
                         src={photo.imgUrl}
-                        alt={photo.title}
+                        alt={photo.title || "User uploaded photo"}
                         width={200}
                         height={280}
                         sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
@@ -97,6 +97,8 @@ const CardPhotoComponent = ({ photo, setPhotos, index }: ICardPhoto) => {
                         priority={index < 4}
                         quality={75}
                         loading={index < 4 ? "eager" : "lazy"}
+                        decoding="async"
+                        fetchPriority={index < 2 ? "high" : "auto"}
                         className="object-cover w-full min-h-[360px] rounded-lg overflow-hidden duration-700 ease-in-out group-hover:scale-110"
                     />
                     <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
@@ -153,15 +155,21 @@ const CardPhotoComponent = ({ photo, setPhotos, index }: ICardPhoto) => {
                 <div className="absolute bottom-0 left-0 right-0 p-4 flex justify-between items-end">
                     <Link
                         href={`/profile/${photo.user._id}`}
-                        title={photo?.user?._id}
+                        title={`View ${photo.user.name}'s profile`}
                         className="flex items-center space-x-2 text-white"
                     >
-                        <Avatar className="shadow-lg bg-white">
-                            <AvatarImage src={photo.user.avatar || ""} />
-                            <AvatarFallback className="text-foreground">
-                                {photo.user.name.slice(0, 2).toUpperCase()}
-                            </AvatarFallback>
-                        </Avatar>
+                        <div className="relative w-10 h-10">
+                            <Avatar className="shadow-lg bg-white w-full h-full">
+                                <AvatarImage
+                                    src={photo.user.avatar || ""}
+                                    alt={`${photo.user.name}'s avatar`}
+                                    className="object-cover"
+                                />
+                                <AvatarFallback className="text-foreground">
+                                    {photo.user.name.slice(0, 2).toUpperCase()}
+                                </AvatarFallback>
+                            </Avatar>
+                        </div>
                         <span className="font-medium text-sm">
                             @{photo.user.name}
                         </span>

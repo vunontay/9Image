@@ -41,15 +41,26 @@ const OrderButton = () => {
     };
 
     return (
-        <Select value={currentSort} onValueChange={handleSortChange}>
-            <SelectTrigger className="w-[140px]">
-                <SelectValue placeholder="Sort by" />
+        <Select
+            value={currentSort}
+            onValueChange={handleSortChange}
+            aria-label="Sort photos by"
+        >
+            <SelectTrigger className="w-[140px]" aria-label="Sort options">
+                <SelectValue
+                    placeholder="Sort by"
+                    aria-label="Current sort option"
+                />
             </SelectTrigger>
             <SelectContent>
                 {sortOptions.map(({ value, label, icon: Icon }) => (
-                    <SelectItem key={value} value={value}>
+                    <SelectItem
+                        key={value}
+                        value={value}
+                        aria-label={`Sort by ${label}`}
+                    >
                         <div className="flex items-center gap-2">
-                            <Icon className="h-4 w-4" />
+                            <Icon className="h-4 w-4" aria-hidden="true" />
                             <span>{label}</span>
                         </div>
                     </SelectItem>

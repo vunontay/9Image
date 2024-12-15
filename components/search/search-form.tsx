@@ -34,15 +34,25 @@ const SearchForm = ({ className }: ISearchForm) => {
         <Form action={handleSearch}>
             <div className={cn("flex items-center", className)}>
                 <div>
-                    <Select name="type" defaultValue="photos">
+                    <Select
+                        name="type"
+                        defaultValue="photos"
+                        aria-label="Select search type"
+                    >
                         <SelectTrigger
                             className="min-w-36 text-sm font-medium border-r rounded-r-none focus:ring-0 focus:ring-offset-0"
-                            aria-label="Search type"
+                            aria-label="Choose search category"
                         >
-                            <SelectValue placeholder="Search type" />
+                            <SelectValue
+                                placeholder="Search type"
+                                aria-label="Selected search category"
+                            />
                         </SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="photos">
+                            <SelectItem
+                                value="photos"
+                                aria-label="Search for photos"
+                            >
                                 <div className="flex items-center gap-2">
                                     <ImageIcon
                                         className="w-4 h-4"
@@ -51,8 +61,10 @@ const SearchForm = ({ className }: ISearchForm) => {
                                     <span>Photos</span>
                                 </div>
                             </SelectItem>
-
-                            <SelectItem value="users">
+                            <SelectItem
+                                value="users"
+                                aria-label="Search for users"
+                            >
                                 <div className="flex items-center gap-2">
                                     <SquareUserRound
                                         className="w-4 h-4"
