@@ -69,52 +69,6 @@ const DetailDialog = ({
                                 @{photo.user.name}
                             </span>
                         </Link>
-                        <div className="flex items-center gap-2 pr-4">
-                            <Button
-                                asChild
-                                variant="outline"
-                                size="icon"
-                                className="rounded-full"
-                                aria-label="Share photo"
-                            >
-                                <Link
-                                    href={`/photo/${photo._id}?s=${photo.slug}`}
-                                >
-                                    <Share className="h-4 w-4" />
-                                </Link>
-                            </Button>
-
-                            <Button
-                                variant="outline"
-                                size="icon"
-                                className="rounded-full"
-                                onClick={handleFavorite}
-                                disabled={isPending}
-                                aria-label={
-                                    isFavorite
-                                        ? "Remove from favorites"
-                                        : "Add to favorites"
-                                }
-                            >
-                                <Heart
-                                    className={cn(
-                                        "h-4 w-4",
-                                        photo.is_favorite
-                                            ? "text-red-500 fill-red-500"
-                                            : "text-gray-700"
-                                    )}
-                                />
-                            </Button>
-                            <Button
-                                variant="outline"
-                                size="icon"
-                                className="rounded-full"
-                                onClick={() => handleDownloadImage(photo)}
-                                aria-label="Download Image"
-                            >
-                                <CloudDownload className="h-4 w-4" />
-                            </Button>
-                        </div>
                     </DialogTitle>
                 </DialogHeader>
 
@@ -140,10 +94,54 @@ const DetailDialog = ({
                             blurDataURL={photo.blurHash}
                         />
                     </div>
+                    <div className="flex items-center gap-2 pr-4 absolute bottom-4 left-4 ">
+                        <Button
+                            asChild
+                            variant="outline"
+                            size="icon"
+                            className="rounded-full"
+                            aria-label="Share photo"
+                        >
+                            <Link href={`/photo/${photo._id}?s=${photo.slug}`}>
+                                <Share className="h-4 w-4" />
+                            </Link>
+                        </Button>
+
+                        <Button
+                            variant="outline"
+                            size="icon"
+                            className="rounded-full"
+                            onClick={handleFavorite}
+                            disabled={isPending}
+                            aria-label={
+                                isFavorite
+                                    ? "Remove from favorites"
+                                    : "Add to favorites"
+                            }
+                        >
+                            <Heart
+                                className={cn(
+                                    "h-4 w-4",
+                                    photo.is_favorite
+                                        ? "text-red-500 fill-red-500"
+                                        : "text-gray-700"
+                                )}
+                            />
+                        </Button>
+                        <Button
+                            variant="outline"
+                            size="icon"
+                            className="rounded-full"
+                            onClick={() => handleDownloadImage(photo)}
+                            aria-label="Download Image"
+                        >
+                            <CloudDownload className="h-4 w-4" />
+                        </Button>
+                    </div>
                     <Button
                         variant="secondary"
                         size="icon"
-                        className="absolute bottom-4 right-4 rounded-full bg-white/80 hover:bg-white"
+                        className="absolute bottom-4 right-4 rounded-full"
                         onClick={(e) => {
                             e.stopPropagation();
                             setZoom(!zoom);

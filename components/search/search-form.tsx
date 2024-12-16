@@ -83,7 +83,7 @@ const SearchForm = ({ className }: ISearchForm) => {
                     <Input
                         id="search-input"
                         name="query"
-                        placeholder="Search image..."
+                        placeholder={`Search...`}
                         className="pe-10 border-l-0 rounded-l-none focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0 w-full"
                         required
                     />

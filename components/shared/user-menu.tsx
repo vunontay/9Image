@@ -1,7 +1,6 @@
 "use client";
 
 import { SearchForm } from "@/components/search/search-form";
-
 import { Button } from "@/components/ui/button";
 import {
     DropdownMenu,
@@ -18,11 +17,11 @@ import {
 import {
     Sheet,
     SheetContent,
+    SheetFooter,
     SheetHeader,
     SheetTitle,
     SheetTrigger,
 } from "@/components/ui/sheet";
-
 import { cn } from "@/lib/utils";
 import {
     Check,
@@ -34,19 +33,17 @@ import {
     Upload,
     UserIcon,
 } from "lucide-react";
-
 import { useTheme } from "next-themes";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
-
-import Form from "next/form";
-
+import { useRouter, usePathname } from "next/navigation";
 import { MainLogo } from "@/components/shared/logo";
 import { UserAvatar } from "@/components/shared/user-avatar";
 import { H3 } from "@/components/shared/title";
 import { TUser } from "@/types/client/type-user";
 import { logout } from "@/components/shared/logout-action";
 import { toast } from "sonner";
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import Form from "next/form";
 
 interface IUserMenu {
     className?: string;
@@ -116,13 +113,19 @@ const UploadButton = ({ className, user }: IUserMenu) => {
 const MenubarButton = ({ className, user }: IUserMenu) => {
     const { theme, setTheme } = useTheme();
     const router = useRouter();
+    const pathname = usePathname();
+    const [open, setOpen] = useState<boolean>(false);
+
+    useEffect(() => {
+        setOpen(false);
+    }, [pathname]);
 
     const switchLanguage = (lang: string) => {
         router.push(`/${lang}`);
     };
 
     return (
-        <Sheet>
+        <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
                 <Button className={className} variant="outline" size="icon">
                     <Menu />
@@ -134,7 +137,7 @@ const MenubarButton = ({ className, user }: IUserMenu) => {
                         <MainLogo />
                     </SheetTitle>
                 </SheetHeader>
-                <div className="flex flex-col h-[calc(100vh-80px)] overflow-hidden">
+                <div className="flex flex-col ">
                     <div className="flex-1 overflow-y-auto px-4">
                         <H3
                             title="Search for free photos"
@@ -156,7 +159,7 @@ const MenubarButton = ({ className, user }: IUserMenu) => {
                                     onClick={() => setTheme("light")}
                                     className="w-24"
                                 >
-                                    <Sun className="mr-2 size-4" />
+                                    <Sun className="size-4" />
                                     Light
                                 </Button>
                                 <Button
@@ -167,7 +170,7 @@ const MenubarButton = ({ className, user }: IUserMenu) => {
                                     onClick={() => setTheme("dark")}
                                     className="w-24"
                                 >
-                                    <Moon className="mr-2 size-4" />
+                                    <Moon className="size-4" />
                                     Dark
                                 </Button>
                             </div>
@@ -198,32 +201,30 @@ const MenubarButton = ({ className, user }: IUserMenu) => {
                             </div>
                         </div>
                     </div>
-
-                    {/* Fixed Bottom Actions */}
-                    <div className="mt-auto border-t p-4 bg-background">
-                        <div className="flex items-center  gap-2">
-                            {user ? (
-                                <>
-                                    <Link href={`/profile/${user._id}`}>
-                                        <Button
-                                            variant="outline"
-                                            className="w-full gap-2"
-                                        >
-                                            <UserIcon className="size-4" />
-                                            Profile
-                                        </Button>
-                                    </Link>
-                                    <LogoutButton />
-                                </>
-                            ) : (
-                                <>
-                                    <LoginButton />
-                                    <UploadButton user={user} />
-                                </>
-                            )}
-                        </div>
-                    </div>
                 </div>
+                <SheetFooter className="mt-auto border-t p-4 bg-background absolute bottom-[30%] w-full">
+                    <div className="flex items-center  gap-2">
+                        {user ? (
+                            <>
+                                <Link href={`/profile/${user._id}`}>
+                                    <Button
+                                        variant="outline"
+                                        className="w-full gap-2"
+                                    >
+                                        Profile
+                                        <UserIcon className="size-4" />
+                                    </Button>
+                                </Link>
+                                <LogoutButton />
+                            </>
+                        ) : (
+                            <div className="flex gap-2">
+                                <LoginButton />
+                                <UploadButton user={user} />
+                            </div>
+                        )}
+                    </div>
+                </SheetFooter>
             </SheetContent>
         </Sheet>
     );
