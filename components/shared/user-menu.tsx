@@ -203,27 +203,31 @@ const MenubarButton = ({ className, user }: IUserMenu) => {
                     </div>
                 </div>
                 <SheetFooter className="mt-auto border-t p-4 bg-background absolute bottom-[30%] w-full">
-                    <div className="flex items-center  gap-2">
-                        {user ? (
-                            <>
-                                <Link href={`/profile/${user._id}`}>
-                                    <Button
-                                        variant="outline"
-                                        className="w-full gap-2"
-                                    >
-                                        Profile
-                                        <UserIcon className="size-4" />
-                                    </Button>
-                                </Link>
-                                <LogoutButton />
-                            </>
-                        ) : (
-                            <div className="flex gap-2">
-                                <LoginButton />
+                    {user ? (
+                        <>
+                            <div className="flex justify-between items-center w-full">
                                 <UploadButton user={user} />
+
+                                <div className="flex gap-2">
+                                    <Link href={`/profile/${user._id}`}>
+                                        <Button
+                                            variant="outline"
+                                            className="w-full gap-2"
+                                        >
+                                            Profile
+                                            <UserIcon className="size-4" />
+                                        </Button>
+                                    </Link>
+                                    <LogoutButton className="h-full" />
+                                </div>
                             </div>
-                        )}
-                    </div>
+                        </>
+                    ) : (
+                        <div className="flex gap-2">
+                            <LoginButton />
+                            <UploadButton user={user} />
+                        </div>
+                    )}
                 </SheetFooter>
             </SheetContent>
         </Sheet>
